@@ -61,8 +61,11 @@ namespace ExtractConstantsAnalyzer
                             var kind = literalSyntax.Kind();
                             if(IsSubject(kind))
                             {
-                                var diagnostic = Diagnostic.Create(Rule, literalSyntax.GetLocation(), literalSyntax.Token.ValueText);
-                                context.ReportDiagnostic(diagnostic);
+                                if (!string.IsNullOrEmpty(literalSyntax.Token.ValueText))
+                                {
+                                    var diagnostic = Diagnostic.Create(Rule, literalSyntax.GetLocation(), literalSyntax.Token.ValueText);
+                                    context.ReportDiagnostic(diagnostic);
+                                }
                             }
                         }
                     }

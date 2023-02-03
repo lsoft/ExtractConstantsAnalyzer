@@ -147,6 +147,12 @@ namespace ExtractConstantsAnalyzer
         private string FilterString(string text)
         {
             text = text.Trim('"', '\'');
+
+            if(text.Length > 16)
+            {
+                return Guid.NewGuid().ToString().Replace("-", "");
+            }
+
             var sb = new StringBuilder(text.Length);
 
             foreach(var c in text)

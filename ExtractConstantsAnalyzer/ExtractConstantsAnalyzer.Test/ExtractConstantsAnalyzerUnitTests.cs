@@ -573,4 +573,146 @@ namespace ConsoleApplication1
     }
 
 
+    [TestMethod]
+    public async Task EmptyStringConstant()
+    {
+        var test = @"
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Diagnostics;
+
+namespace ConsoleApplication1
+{
+    class MyClass
+    {
+        public void MyMethod(string myarg1)
+        {
+            if(myarg1 == {|#0:""""|})
+            {
+            }
+        }
+    }
+}
+";
+
+        var fixtest = @"
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Diagnostics;
+
+namespace ConsoleApplication1
+{
+    class MyClass
+    {
+        public void MyMethod(string myarg1)
+        {
+            if(myarg1 == {|#0:""""|})
+            {
+            }
+        }
+    }
+}
+";
+
+        await VerifyCS.VerifyCodeFixAsync(test, 0, fixtest);
+    }
+
+    [TestMethod]
+    public async Task EmptyStringConstantInMethodArgument()
+    {
+        var test = @"
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Diagnostics;
+
+namespace ConsoleApplication1
+{
+    class MyClass
+    {
+        public void MyMethod(string myarg1 = {|#0:""MyConstant""|})
+        {
+        }
+    }
+}
+";
+
+        var fixtest = @"
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Diagnostics;
+
+namespace ConsoleApplication1
+{
+    class MyClass
+    {
+        private const string MyClassMyConstant = ""MyConstant"";
+        public void MyMethod(string myarg1 = MyClassMyConstant)
+        {
+        }
+    }
+}
+";
+
+        var expected0 = VerifyCS.Diagnostic("ExtractConstantsAnalyzer")
+            .WithLocation(0).WithArguments("MyConstant")
+            ;
+        await VerifyCS.VerifyCodeFixAsync(test, 1, new[] { expected0 }, fixtest);
+    }
+
+    [TestMethod]
+    public async Task EmptyStringConstantInMethodArgumentInterface()
+    {
+        var test = @"
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Diagnostics;
+
+namespace ConsoleApplication1
+{
+    interface IMyInterface
+    {
+        void MyMethod(string myarg1 = {|#0:""MyConstant""|});
+    }
+}
+";
+
+        var fixtest = @"
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Diagnostics;
+
+namespace ConsoleApplication1
+{
+    interface IMyInterface
+    {
+        private const string IMyInterfaceMyConstant = ""MyConstant"";
+        void MyMethod(string myarg1 = IMyInterfaceMyConstant);
+    }
+}
+";
+
+        var expected0 = VerifyCS.Diagnostic("ExtractConstantsAnalyzer")
+            .WithLocation(0).WithArguments("MyConstant")
+            ;
+        await VerifyCS.VerifyCodeFixAsync(test, 1, new[] { expected0 }, fixtest);
+    }
+
 }

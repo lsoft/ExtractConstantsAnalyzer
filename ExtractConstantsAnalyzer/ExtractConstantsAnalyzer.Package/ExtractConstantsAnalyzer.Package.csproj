@@ -10,7 +10,7 @@
 
   <PropertyGroup>
     <PackageId>ExtractConstantsAnalyzer</PackageId>
-    <PackageVersion>1.1.0.0</PackageVersion>
+    <PackageVersion>1.2.0.0</PackageVersion>
     <Authors>ls</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/lsoft/ExtractConstantsAnalyzer</PackageProjectUrl>
