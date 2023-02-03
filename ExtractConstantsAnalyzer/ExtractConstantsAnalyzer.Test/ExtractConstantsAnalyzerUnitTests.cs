@@ -466,4 +466,111 @@ public void MyMethod(char myarg1) { if(myarg1 == MyClass_) { } } }
             ;
         await VerifyCS.VerifyCodeFixAsync(test, 1, new[] { expected1 }, fixtest);
     }
+
+
+    [TestMethod]
+    public async Task AddNewCharConstantStruct()
+    {
+        var test = @"
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Diagnostics;
+
+namespace ConsoleApplication1
+{
+    struct MyStruct
+    {
+        public void MyMethod(char myarg1)
+        {
+            if(myarg1 == {|#0:'#'|})
+            {
+            }
+        }
+    }
+}";
+
+        var fixtest = @"
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Diagnostics;
+
+namespace ConsoleApplication1
+{
+    struct MyStruct
+    {
+        private const char MyStruct_ = '#';
+        public void MyMethod(char myarg1)
+        {
+            if(myarg1 == MyStruct_)
+            {
+            }
+        }
+    }
+}";
+
+        var expected1 = VerifyCS.Diagnostic("ExtractConstantsAnalyzer")
+            .WithLocation(0).WithArguments("#")
+            ;
+        await VerifyCS.VerifyCodeFixAsync(test, 1, new[] { expected1 }, fixtest);
+    }
+
+    [TestMethod]
+    public async Task AddNewCharConstantRecord()
+    {
+        var test = @"
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Diagnostics;
+
+namespace ConsoleApplication1
+{
+    record MyRecord
+    {
+        public void MyMethod(char myarg1)
+        {
+            if(myarg1 == {|#0:'#'|})
+            {
+            }
+        }
+    }
+}";
+
+        var fixtest = @"
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Diagnostics;
+
+namespace ConsoleApplication1
+{
+    record MyRecord
+    {
+        private const char MyRecord_ = '#';
+        public void MyMethod(char myarg1)
+        {
+            if(myarg1 == MyRecord_)
+            {
+            }
+        }
+    }
+}";
+
+        var expected1 = VerifyCS.Diagnostic("ExtractConstantsAnalyzer")
+            .WithLocation(0).WithArguments("#")
+            ;
+        await VerifyCS.VerifyCodeFixAsync(test, 1, new[] { expected1 }, fixtest);
+    }
+
+
 }

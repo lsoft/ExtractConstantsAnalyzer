@@ -50,7 +50,7 @@ namespace ExtractConstantsAnalyzer
 
             var lesMember = les.GoUpTo<MemberDeclarationSyntax>();
 
-            var cds = les.GoUpTo<ClassDeclarationSyntax>();
+            var cds = les.GoUpTo<TypeDeclarationSyntax>();
             var cds2Members = cds.Members;
 
             var semanticModel = await context.Document.GetSemanticModelAsync(context.CancellationToken);
