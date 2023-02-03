@@ -715,4 +715,225 @@ namespace ConsoleApplication1
         await VerifyCS.VerifyCodeFixAsync(test, 1, new[] { expected0 }, fixtest);
     }
 
+    [TestMethod]
+    public async Task UseExistingULongConstant1()
+    {
+        var test = @"
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Diagnostics;
+
+namespace ConsoleApplication1
+{
+    class MyClass
+    {
+        private const ulong MyClass123 = 123;
+
+        public void MyMethod(ulong myarg2)
+        {
+            if(myarg2 == {|#0:123|})
+            {
+            }
+        }
+    }
+}";
+
+        var fixtest = @"
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Diagnostics;
+
+namespace ConsoleApplication1
+{
+    class MyClass
+    {
+        private const ulong MyClass123 = 123;
+
+        public void MyMethod(ulong myarg2)
+        {
+            if(myarg2 == MyClass123)
+            {
+            }
+        }
+    }
+}";
+
+        var expected0 = VerifyCS.Diagnostic("ExtractConstantsAnalyzer")
+            .WithLocation(0).WithArguments("123")
+            ;
+        await VerifyCS.VerifyCodeFixAsync(test, 1, new[] { expected0 }, fixtest);
+    }
+
+    [TestMethod]
+    public async Task UseExistingULongConstant2()
+    {
+        var test = @"
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Diagnostics;
+
+namespace ConsoleApplication1
+{
+    class MyClass
+    {
+        private const ulong MyClass123 = 123uL;
+
+        public void MyMethod(ulong myarg2)
+        {
+            if(myarg2 == {|#0:123|})
+            {
+            }
+        }
+    }
+}";
+
+        var fixtest = @"
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Diagnostics;
+
+namespace ConsoleApplication1
+{
+    class MyClass
+    {
+        private const ulong MyClass123 = 123uL;
+
+        public void MyMethod(ulong myarg2)
+        {
+            if(myarg2 == MyClass123)
+            {
+            }
+        }
+    }
+}";
+
+        var expected0 = VerifyCS.Diagnostic("ExtractConstantsAnalyzer")
+            .WithLocation(0).WithArguments("123")
+            ;
+        await VerifyCS.VerifyCodeFixAsync(test, 1, new[] { expected0 }, fixtest);
+    }
+
+    [TestMethod]
+    public async Task UseExistingULongConstant3()
+    {
+        var test = @"
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Diagnostics;
+
+namespace ConsoleApplication1
+{
+    class MyClass
+    {
+        private const ulong MyClass123 = 123;
+
+        public void MyMethod(ulong myarg2)
+        {
+            if(myarg2 == {|#0:123uL|})
+            {
+            }
+        }
+    }
+}";
+
+        var fixtest = @"
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Diagnostics;
+
+namespace ConsoleApplication1
+{
+    class MyClass
+    {
+        private const ulong MyClass123 = 123;
+
+        public void MyMethod(ulong myarg2)
+        {
+            if(myarg2 == MyClass123)
+            {
+            }
+        }
+    }
+}";
+
+        var expected0 = VerifyCS.Diagnostic("ExtractConstantsAnalyzer")
+            .WithLocation(0).WithArguments("123")
+            ;
+        await VerifyCS.VerifyCodeFixAsync(test, 1, new[] { expected0 }, fixtest);
+    }
+
+    [TestMethod]
+    public async Task UseExistingULongConstant4()
+    {
+        var test = @"
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Diagnostics;
+
+namespace ConsoleApplication1
+{
+    class MyClass
+    {
+        private const ulong MyClass123 = 123uL;
+
+        public void MyMethod(ulong myarg2)
+        {
+            if(myarg2 == {|#0:123uL|})
+            {
+            }
+        }
+    }
+}";
+
+        var fixtest = @"
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Diagnostics;
+
+namespace ConsoleApplication1
+{
+    class MyClass
+    {
+        private const ulong MyClass123 = 123uL;
+
+        public void MyMethod(ulong myarg2)
+        {
+            if(myarg2 == MyClass123)
+            {
+            }
+        }
+    }
+}";
+
+        var expected0 = VerifyCS.Diagnostic("ExtractConstantsAnalyzer")
+            .WithLocation(0).WithArguments("123")
+            ;
+        await VerifyCS.VerifyCodeFixAsync(test, 1, new[] { expected0 }, fixtest);
+    }
+
+
 }
